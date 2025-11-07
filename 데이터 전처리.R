@@ -2,7 +2,7 @@
 # 1. 패키지 로드
 library(tidyverse)
 library(corrplot)
-library(car) #
+library(car)
 
 # 2. 데이터 로드
 pitching <- read.csv("pitching.csv", stringsAsFactors = FALSE)
