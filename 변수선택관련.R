@@ -1,6 +1,3 @@
-system('git config --global user.email "rlarkdms533@gmail.com"')
-system('git config --global user.name "sonhonglock51"')
-system('git config --global --list')
 library(tidyverse)
 library(car)
 
