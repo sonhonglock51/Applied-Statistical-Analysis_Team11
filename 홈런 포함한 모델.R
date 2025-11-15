@@ -62,10 +62,10 @@ roc_obj <- roc(actual, pred_prob, quiet = TRUE)
 auc_value <- as.numeric(auc(roc_obj))
 
 # -------------------------------------------------
-# 8. 결과 출력 (paste0 사용 → %+% 제거!)
+# 8. 결과 출력
 # -------------------------------------------------
 cat(paste0("\n", paste(rep("=", 55), collapse = ""), "\n"))
-cat("       MLB 81승 초과 예측 – 종합 성능 평가 보고서\n")
+cat(" MLB 81승 초과 예측 – 종합 성능 평가 보고서 (홈런 포함)\n")
 cat(paste0(paste(rep("=", 55), collapse = ""), "\n\n"))
 
 cat("=== 혼동 행렬 ===\n")
@@ -77,30 +77,36 @@ cat(sprintf("Precision (Win) : %.3f\n", precision))
 cat(sprintf("Recall (Win)    : %.3f\n", recall))
 cat(sprintf("Specificity     : %.3f\n", specificity))
 cat(sprintf("F1-Score        : %.3f\n", f1))
-cat(sprintf("AUC-ROC         : %.3f  ", auc_value))
+cat(sprintf("AUC-ROC         : %.3f ", auc_value))
 cat(ifelse(auc_value >= 0.9, "(Excellent!)\n", "\n"))
 
 cat("\n--- 핵심 해석 ---\n")
 cat("• 무작위 예측: 50%\n")
 cat(sprintf("• 본 모델: %.1f%% → %.1fp 향상!\n", accuracy*100, (accuracy-0.5)*100))
-cat("• AUC 0.96 이상 → 매우 우수한 구분력\n")
+cat("• AUC 0.95 이상 → 매우 우수한 구분력\n")
 
 # -------------------------------------------------
-# 9. ROC 곡선 그리기 (예쁘게!)
+# 9. ROC 곡선 그리기 (파란 글씨 제거 + 빨간 글씨만!)
 # -------------------------------------------------
 plot(roc_obj,
-     main = "ROC Curve: 81승 초과 예측 모델",
+     main = "ROC Curve: 81승 초과 예측 모델 (홈런 포함)",
      col = "dodgerblue",
      lwd = 3,
-     print.auc = TRUE,
-     print.auc.x = 0.75,
-     print.auc.y = 0.15,
+     print.auc = FALSE,                    # 파란 AUC 텍스트 완전 제거
      auc.polygon = TRUE,
      auc.polygon.col = "#E3F2FD",
      grid = TRUE,
      legacy.axes = TRUE)
+
+# 대각선 기준선
 abline(a = 0, b = 1, lty = 2, col = "gray60", lwd = 2)
-text(0.7, 0.1, paste("AUC =", round(auc_value, 3)), col = "red", font = 2, cex = 1.2)
+
+# 빨간색 AUC 텍스트만 수동 추가
+text(0.7, 0.1,
+     paste("AUC =", round(auc_value, 3)),
+     col = "red",      # 빨간색
+     font = 2,         # 볼드체
+     cex = 1.3)        # 글자 크기
 
 # -------------------------------------------------
 # 10. 새 팀 예측 예시
