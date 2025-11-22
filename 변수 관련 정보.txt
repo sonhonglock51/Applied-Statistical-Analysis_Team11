@@ -1,0 +1,3 @@
+ra : 팀 능력 (특이점 : 음의 상관관계)
+slg / sb% / total_bb : 타자 능력
+pitch_so / pitch_bb : 투수 능력
