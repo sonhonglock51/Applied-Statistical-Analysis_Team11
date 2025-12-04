@@ -7,7 +7,7 @@ library(rpart.plot)
 # 데이터 파일 불러오기 (업로드된 파일 사용)
 data <- read.csv("mlb_team_stats_2000_2015(SB% 추가, total_hr 제거본).csv")
 
-# 예측 대상 변수 'w'를 이진(Binary) 변수로 변환 (기준 수정): 
+# 🚨 예측 대상 변수 'w'를 이진(Binary) 변수로 변환 (기준 수정): 
 # 승리 횟수(w)가 81보다 크면(즉, 82승 이상) "Win", 아니면 "Loss"
 data <- data %>%
   mutate(
@@ -46,23 +46,15 @@ tree_model_new <- rpart(
 
 cat("의사결정 나무 모델 훈련 완료.\n")
 
-# 의사결정 나무 시각화
-rpart.plot(
-  tree_model_new,
-  type = 2,           
-  extra = 101,        
-  under = TRUE,       
-  fallen.leaves = TRUE, 
-  main = "Decision Tree for Predicting MLB Win/Loss (w > 81 Wins)"
-)
+# KBO 데이터 세트에 대한 예측
+kbo <- read.csv("KBO예측데이터.csv")
+kbo$Win_Loss <- factor(kbo$Win_Loss, levels = c("Loss", "Win"))
+prediction_kbo <- predict(tree_model_new,newdata = kbo,type = 'class')
 
-# 테스트 세트에 대한 예측
-predictions_new <- predict(tree_model_new, newdata = test_set, type = "class")
+# 혼동 행렬
+confusion_matrix_new <- confusionMatrix(predictions_kbo, kbo$Win_Loss)
 
-# 혼동 행렬 (Confusion Matrix) 생성 및 성능 지표 계산
-confusion_matrix_new <- confusionMatrix(predictions_new, test_set$Win_Loss)
-
-cat("\n### 📈 의사결정 나무 모델 성능 분석 (테스트 세트, w > 81 기준) ###\n")
+cat("\n### 의사결정 나무 모델 성능 분석 ###\n")
 print(confusion_matrix_new)
 
 cat("\n### 🔑 주요 변수 중요도 (Variable Importance) ###\n")
